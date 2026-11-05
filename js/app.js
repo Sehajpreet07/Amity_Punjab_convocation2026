@@ -28,6 +28,72 @@
     }
   }
 
+  // headline words
+  const title = $("#welcomeTitle");
+  const words = title.textContent.trim().split(/\s+/);
+  title.innerHTML = words.map((w, i) => `<span class="w${i === words.length - 1 ? " accent" : ""}" style="--i:${i}">${esc(w)}</span>`).join(" ");
+
+  // marquee
+  const items = (C.marquee || [C.eventTitle]).map((t) => `${esc(t)} <i>✦</i>`).join(" ");
+  $$("[data-marquee]").forEach((el) => { el.innerHTML = `<span>${items}</span><span>${items}</span><span>${items}</span><span>${items}</span>`; });
+
+  // bunting flags
+  function drawBunting() {
+    const svg = $("#bunting");
+    const W = svg.clientWidth || innerWidth;
+    const small = W < 560;
+    const swag = small ? 130 : 210, sag = small ? 14 : 22, fw = small ? 18 : 24, fh = small ? 26 : 34;
+    const colors = ["#14346e", "#ffcc00", "#9fbfff", "#ff8a65", "#ffffff"];
+    const n = Math.max(2, Math.round(W / swag));
+    const seg = W / n;
+    let d = "", flags = "", k = 0;
+    for (let i = 0; i < n; i++) {
+      const x0 = i * seg, x1 = x0 + seg;
+      d += `M${x0} 4 Q${x0 + seg / 2} ${4 + sag * 2} ${x1} 4 `;
+      const per = Math.max(3, Math.floor(seg / (fw + 10)));
+      for (let j = 1; j <= per; j++) {
+        const t = j / (per + 1);
+        const x = x0 + seg * t;
+        const y = 4 + 2 * (1 - t) * t * sag * 2;
+        const c = colors[k % colors.length];
+        const stroke = c === "#ffffff" ? ' stroke="#e2d6b8" stroke-width="1"' : "";
+        flags += `<g class="flag-in" style="--din:${(k * 40)}ms"><path class="flag" style="--dl:${-(k % 7) * .45}s" d="M${x - fw / 2} ${y} L${x + fw / 2} ${y} L${x} ${y + fh} Z" fill="${c}"${stroke}/></g>`;
+        k++;
+      }
+    }
+    svg.setAttribute("viewBox", `0 0 ${W} ${(small ? 64 : 86)}`);
+    svg.innerHTML = `<path class="string" d="${d}"/>${flags}`;
+  }
+  drawBunting();
+  let bResize;
+  addEventListener("resize", () => { clearTimeout(bResize); bResize = setTimeout(drawBunting, 200); });
+
+  // countdown
+  if (C.countdownTo) {
+    const end = new Date(C.countdownTo).getTime();
+    const box = $("#countdown");
+    if (!isNaN(end)) {
+      box.hidden = false;
+      const cells = { d: $('[data-cd="d"]'), h: $('[data-cd="h"]'), m: $('[data-cd="m"]'), s: $('[data-cd="s"]') };
+      const set = (el, v) => { if (el.textContent !== v) { el.textContent = v; el.classList.remove("tick"); void el.offsetWidth; el.classList.add("tick"); } };
+      const tick = () => {
+        let left = Math.max(0, end - Date.now());
+        if (!left) {
+          box.innerHTML = `<p class="cd-done">${esc(C.countdownDone || "Today is the day!")}</p>`;
+          return clearInterval(timer);
+        }
+        const d = Math.floor(left / 864e5); left -= d * 864e5;
+        const h = Math.floor(left / 36e5); left -= h * 36e5;
+        const m = Math.floor(left / 6e4); left -= m * 6e4;
+        const s = Math.floor(left / 1e3);
+        set(cells.d, String(d)); set(cells.h, String(h).padStart(2, "0"));
+        set(cells.m, String(m).padStart(2, "0")); set(cells.s, String(s).padStart(2, "0"));
+      };
+      const timer = setInterval(tick, 1000);
+      tick();
+    }
+  }
+
   // hall layout
   const hall = buildHall();
 
@@ -168,6 +234,8 @@
     $("#rGate").textContent = gate.name;
 
     switchView("result");
+    const stamp = $(".stamp");
+    stamp.classList.remove("is-on"); void stamp.offsetWidth; stamp.classList.add("is-on");
 
     setTimeout(() => {
       $$(".tval").forEach((el, i) => { el.classList.remove("pop"); void el.offsetWidth; el.style.animationDelay = i * 110 + "ms"; el.classList.add("pop"); });
@@ -222,21 +290,22 @@
     const out = [];
 
     out.push(`<defs>
-      <linearGradient id="stageGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset="1" stop-color="#d9a521"/></linearGradient>
-      <radialGradient id="seatGlow"><stop offset="0" stop-color="#ffe08a" stop-opacity=".9"/><stop offset="1" stop-color="#ffe08a" stop-opacity="0"/></radialGradient>
+      <linearGradient id="stageGrad" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a5aa8"/><stop offset="1" stop-color="#14346e"/></linearGradient>
+      <radialGradient id="seatGlow"><stop offset="0" stop-color="#ffcc00" stop-opacity=".75"/><stop offset="1" stop-color="#ffcc00" stop-opacity="0"/></radialGradient>
     </defs>`);
     out.push(`<rect class="m-hall" x="6" y="6" width="${W - 12}" height="${H - 12}" rx="22"/>`);
 
     // stage
     const sx = stage.x, sy = stage.y, sw = stage.w, sh = stage.h;
     out.push(`<path class="m-stage" d="M${sx + 24} ${sy} H${sx + sw - 24} Q${sx + sw} ${sy} ${sx + sw} ${sy + 24} V${sy + sh - 18} Q${W / 2} ${sy + sh + 16} ${sx} ${sy + sh - 18} V${sy + 24} Q${sx} ${sy} ${sx + 24} ${sy} Z"/>`);
+    out.push(`<path class="m-stage-edge" d="M${sx + 24} ${sy} H${sx + sw - 24} Q${sx + sw} ${sy} ${sx + sw} ${sy + 24} V${sy + sh - 18} Q${W / 2} ${sy + sh + 16} ${sx} ${sy + sh - 18} V${sy + 24} Q${sx} ${sy} ${sx + 24} ${sy} Z"/>`);
     out.push(`<text class="m-stage-text" x="${W / 2 + 4}" y="${sy + sh / 2 + 4}" text-anchor="middle">STAGE</text>`);
     out.push(`<text class="m-stage-sub" x="${W / 2}" y="${sy + sh / 2 + 22}" text-anchor="middle">CONVOCATION</text>`);
 
     // blocks & seats
     for (const b of blocks) {
       const isMine = b === block;
-      out.push(`<text class="m-block-label" x="${b.x + b.w / 2}" y="${labelY}" text-anchor="middle">BLOCK ${esc(b.id)}</text>`);
+      out.push(`<text class="m-block-label${isMine ? " is-mine" : ""}" x="${b.x + b.w / 2}" y="${labelY}" text-anchor="middle">BLOCK ${esc(b.id)}</text>`);
       for (let r = 1; r <= b.rows; r++) {
         const y = rowY(r);
         for (let n = 1; n <= b.seats; n++) {
@@ -325,7 +394,7 @@
   function seatBoxFor() {
     const { W, H } = hall, wrap = $("#mapWrap");
     const ar = wrap.clientWidth / wrap.clientHeight || W / H;
-    const zw = seatFocus.zw, zh = Math.min(H, zw / ar);
+    const zw = Math.min(W, Math.max(seatFocus.zw, wrap.clientWidth / 1.7)), zh = Math.min(H, zw / ar);
     return [
       Math.max(0, Math.min(W - zw, seatFocus.cx - zw / 2)),
       Math.max(0, Math.min(H - zh, seatFocus.cy - zh * 0.58)),
@@ -375,40 +444,50 @@
     }
   });
 
-  // sparkles background
-  (function sparkles() {
-    const cv = $("#sparkles"), ctx = cv.getContext("2d");
+  // falling paper in the background
+  (function ambient() {
+    if (reduceMotion) return;
+    const cv = $("#ambient"), ctx = cv.getContext("2d");
+    const colors = ["#ffcc00", "#14346e", "#9fbfff", "#ff8a65", "#f5b400"];
     let w, h, dpr, parts = [];
+    const spawn = (anyY) => ({
+      x: Math.random() * w, y: anyY ? Math.random() * h : -20,
+      s: (Math.random() * 5 + 4) * dpr, vy: (Math.random() * .5 + .35) * dpr,
+      sway: Math.random() * 6, sp: Math.random() * .02 + .01, rot: Math.random() * 6, vr: (Math.random() - .5) * .05,
+      c: colors[(Math.random() * colors.length) | 0], a: Math.random() * .35 + .35
+    });
     const resize = () => {
-      dpr = Math.min(2, window.devicePixelRatio || 1);
+      dpr = Math.min(2, devicePixelRatio || 1);
       w = cv.width = innerWidth * dpr; h = cv.height = innerHeight * dpr;
-      const n = Math.round(Math.min(90, (innerWidth * innerHeight) / 14000));
+      const n = Math.round(Math.min(46, (innerWidth * innerHeight) / 26000));
       parts = Array.from({ length: n }, () => spawn(true));
     };
-    const spawn = (anyY) => ({
-      x: Math.random() * w, y: anyY ? Math.random() * h : h + 10,
-      r: (Math.random() * 1.6 + .4) * dpr, vy: (Math.random() * .25 + .08) * dpr,
-      vx: (Math.random() - .5) * .12 * dpr, tw: Math.random() * Math.PI * 2, ts: Math.random() * .03 + .01
-    });
     resize();
     addEventListener("resize", resize);
-    if (reduceMotion) {
-      parts.forEach((p) => { ctx.fillStyle = "rgba(255,224,138,.5)"; ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); });
-      return;
-    }
     (function loop() {
       ctx.clearRect(0, 0, w, h);
       for (const p of parts) {
-        p.y -= p.vy; p.x += p.vx; p.tw += p.ts;
-        if (p.y < -10) Object.assign(p, spawn(false));
-        const a = .25 + .55 * (0.5 + 0.5 * Math.sin(p.tw));
-        ctx.fillStyle = `rgba(255,224,138,${a})`;
-        ctx.shadowColor = "rgba(242,193,78,.8)"; ctx.shadowBlur = 6 * dpr;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2); ctx.fill();
+        p.y += p.vy; p.sway += p.sp; p.rot += p.vr;
+        p.x += Math.sin(p.sway) * .4 * dpr;
+        if (p.y > h + 20) Object.assign(p, spawn(false));
+        ctx.save(); ctx.globalAlpha = p.a; ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.scale(1, Math.cos(p.sway * 2));
+        ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+        ctx.restore();
       }
       requestAnimationFrame(loop);
     })();
   })();
+
+  // ticket tilt
+  const ticket = $("#ticket");
+  if (!reduceMotion && matchMedia("(hover: hover)").matches) {
+    ticket.addEventListener("pointermove", (e) => {
+      const r = ticket.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      ticket.style.transform = `perspective(900px) rotateX(${(-y * 6).toFixed(2)}deg) rotateY(${(x * 8).toFixed(2)}deg)`;
+    });
+    ticket.addEventListener("pointerleave", () => { ticket.style.transform = ""; });
+  }
 
   // confetti
   function confetti() {
@@ -416,7 +495,7 @@
     const cv = $("#confetti"), ctx = cv.getContext("2d");
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     const w = cv.width = innerWidth * dpr, h = cv.height = innerHeight * dpr;
-    const colors = ["#ffe08a", "#f2c14e", "#d9a521", "#ffffff", "#9ab8ff", "#fff3cc"];
+    const colors = ["#ffcc00", "#f5b400", "#14346e", "#1f4a8f", "#9fbfff", "#ff8a65", "#5fd4a4"];
     const pieces = [];
     const burst = (x, angle, n) => {
       for (let i = 0; i < n; i++) {

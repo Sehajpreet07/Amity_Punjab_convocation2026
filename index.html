@@ -4,95 +4,147 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Convocation Seat Finder</title>
-  <meta name="description" content="Find your seat for the Amity University Punjab Convocation." />
-  <meta name="theme-color" content="#06142e" />
-  <link rel="icon" href="assets/logo.svg" />
+  <meta name="description" content="Find your seat for the Amity University Punjab Convocation 2026." />
+  <meta name="theme-color" content="#fffaf0" />
+  <link rel="icon" href="assets/amity-shield.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Playfair+Display:ital,wght@0,700;0,800;1,600;1,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <canvas id="sparkles" aria-hidden="true"></canvas>
+  <div class="bg" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="dots"></div>
+  </div>
+  <canvas id="ambient" aria-hidden="true"></canvas>
   <canvas id="confetti" aria-hidden="true"></canvas>
-  <div class="glow glow-1" aria-hidden="true"></div>
-  <div class="glow glow-2" aria-hidden="true"></div>
 
   <div class="demo-badge" id="demoBadge" hidden>Demo data</div>
 
-  <!-- welcome view -->
+  <!-- welcome -->
   <main id="welcome" class="view view-welcome is-active">
+    <svg class="bunting" id="bunting" aria-hidden="true"></svg>
+
     <div class="caps" aria-hidden="true">
       <svg class="cap cap-1" viewBox="0 0 64 48"><use href="#i-cap"/></svg>
       <svg class="cap cap-2" viewBox="0 0 64 48"><use href="#i-cap"/></svg>
       <svg class="cap cap-3" viewBox="0 0 64 48"><use href="#i-cap"/></svg>
       <svg class="cap cap-4" viewBox="0 0 64 48"><use href="#i-cap"/></svg>
+      <svg class="cap cap-5" viewBox="0 0 64 48"><use href="#i-cap"/></svg>
+      <svg class="cap cap-6" viewBox="0 0 64 48"><use href="#i-cap"/></svg>
     </div>
 
-    <header class="brand reveal" style="--d:0">
-      <img class="brand-logo" data-cfg-src="logo" alt="University logo" />
-      <span class="brand-name" data-cfg="university"></span>
-    </header>
-
     <section class="hero">
-      <p class="eyebrow reveal" style="--d:1"><span class="line"></span><span data-cfg="eventTitle"></span><span class="line"></span></p>
-      <h1 class="title reveal" style="--d:2"><span class="shimmer" data-cfg="welcomeHeading"></span></h1>
+      <div class="sunburst" aria-hidden="true"></div>
+
+      <img class="logo reveal" style="--d:0" data-cfg-src="logo" alt="Amity University Punjab" />
+
+      <div class="ribbon reveal" style="--d:1">
+        <svg viewBox="0 0 400 70" aria-hidden="true">
+          <path class="rb-tail" d="M0 22 H52 V62 H0 L16 42 Z"/>
+          <path class="rb-tail" d="M400 22 H348 V62 H400 L384 42 Z"/>
+          <path class="rb-fold" d="M30 52 L52 62 V52 Z"/>
+          <path class="rb-fold" d="M370 52 L348 62 V52 Z"/>
+          <rect class="rb-band" x="30" y="8" width="340" height="44" rx="4"/>
+          <rect class="rb-line" x="38" y="14" width="324" height="32" rx="2"/>
+        </svg>
+        <span data-cfg="eventTitle"></span>
+      </div>
+
+      <div class="headline reveal" style="--d:2">
+        <svg class="laurel laurel-l" viewBox="0 0 60 150" aria-hidden="true"><use href="#i-laurel"/></svg>
+        <h1 class="title" id="welcomeTitle" data-cfg="welcomeHeading"></h1>
+        <svg class="laurel laurel-r" viewBox="0 0 60 150" aria-hidden="true"><use href="#i-laurel"/></svg>
+      </div>
+      <svg class="flourish reveal" style="--d:3" viewBox="0 0 320 28" aria-hidden="true">
+        <path d="M4 14 C 60 14, 80 4, 120 10 S 150 24, 160 14 S 190 2, 200 14 S 260 18, 316 14"/>
+        <circle cx="160" cy="14" r="4"/>
+      </svg>
+
       <p class="subtitle reveal" style="--d:3" data-cfg="batchLine"></p>
       <p class="message reveal" style="--d:4" data-cfg="welcomeMessage"></p>
 
       <form class="finder reveal" style="--d:5" id="finder" novalidate autocomplete="off">
-        <label for="enr" class="finder-label">Enter your Enrollment Number</label>
-        <div class="finder-row">
-          <div class="field">
-            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-id"/></svg>
-            <input id="enr" name="enr" type="text" inputmode="text" spellcheck="false"
-                   autocapitalize="characters" maxlength="20" placeholder="e.g. A25305224077" aria-describedby="finderMsg" />
+        <div class="finder-inner">
+          <label for="enr" class="finder-label">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-seat"/></svg>
+            Find your seat
+          </label>
+          <div class="finder-row">
+            <div class="field">
+              <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-id"/></svg>
+              <input id="enr" name="enr" type="text" inputmode="text" spellcheck="false"
+                     autocapitalize="characters" maxlength="20" placeholder="Enrollment number" aria-describedby="finderMsg" />
+            </div>
+            <button class="btn btn-primary" type="submit" id="findBtn">
+              <span class="btn-text">Find My Seat</span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>
+              <span class="spinner" aria-hidden="true"></span>
+            </button>
           </div>
-          <button class="btn btn-gold" type="submit" id="findBtn">
-            <span class="btn-text">Find My Seat</span>
-            <svg class="btn-arrow" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow"/></svg>
-            <span class="spinner" aria-hidden="true"></span>
-          </button>
+          <p class="finder-msg" id="finderMsg" role="status" aria-live="polite"></p>
+          <button type="button" class="try-demo" id="tryDemo" hidden>Try a demo number: <b></b></button>
         </div>
-        <p class="finder-msg" id="finderMsg" role="status" aria-live="polite"></p>
-        <button type="button" class="try-demo" id="tryDemo" hidden>Try a demo number: <b></b></button>
       </form>
 
-      <ul class="info reveal" style="--d:6">
-        <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cal"/></svg><span data-cfg="date"></span></li>
-        <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg><span data-cfg="reportingTime"></span></li>
-        <li><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin"/></svg><span data-cfg="venue"></span></li>
+      <div class="countdown reveal" style="--d:6" id="countdown" hidden>
+        <p class="cd-label">The big day is almost here</p>
+        <div class="cd-tiles">
+          <div class="cd-tile"><b data-cd="d">0</b><span>Days</span></div>
+          <div class="cd-tile"><b data-cd="h">00</b><span>Hours</span></div>
+          <div class="cd-tile"><b data-cd="m">00</b><span>Minutes</span></div>
+          <div class="cd-tile"><b data-cd="s">00</b><span>Seconds</span></div>
+        </div>
+      </div>
+
+      <ul class="info reveal" style="--d:7">
+        <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cal"/></svg></span><span data-cfg="date"></span></li>
+        <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-clock"/></svg></span><span data-cfg="reportingTime"></span></li>
+        <li><span class="ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pin"/></svg></span><span data-cfg="venue"></span></li>
       </ul>
     </section>
 
-    <footer class="foot reveal" style="--d:7">With pride &amp; best wishes · <span data-cfg="university"></span></footer>
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" data-marquee></div></div>
   </main>
 
-  <!-- result view -->
+  <!-- result -->
   <main id="result" class="view view-result" aria-live="polite">
     <nav class="topbar">
       <button class="btn-ghost" id="backBtn" type="button">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-back"/></svg>
         <span>Search again</span>
       </button>
-      <div class="topbar-brand">
-        <img data-cfg-src="logo" alt="" />
-        <span data-cfg="eventTitle"></span>
-      </div>
+      <img class="topbar-logo" data-cfg-src="logo" alt="Amity University Punjab" />
     </nav>
 
     <section class="greet">
-      <p class="eyebrow small"><span class="line"></span>Congratulations<span class="line"></span></p>
+      <div class="sunburst small" aria-hidden="true"></div>
+      <div class="ribbon ribbon-sm">
+        <svg viewBox="0 0 400 70" aria-hidden="true">
+          <path class="rb-tail" d="M0 22 H52 V62 H0 L16 42 Z"/>
+          <path class="rb-tail" d="M400 22 H348 V62 H400 L384 42 Z"/>
+          <path class="rb-fold" d="M30 52 L52 62 V52 Z"/>
+          <path class="rb-fold" d="M370 52 L348 62 V52 Z"/>
+          <rect class="rb-band" x="30" y="8" width="340" height="44" rx="4"/>
+          <rect class="rb-line" x="38" y="14" width="324" height="32" rx="2"/>
+        </svg>
+        <span>Congratulations</span>
+      </div>
       <h2 class="greet-name" id="rName"></h2>
       <div class="greet-meta">
-        <span class="chip chip-mono" id="rEnr"></span>
+        <span class="chip chip-id" id="rEnr"></span>
         <span class="chip" id="rProgram"></span>
       </div>
     </section>
 
-    <section class="ticket" aria-label="Your seat">
+    <section class="ticket" id="ticket" aria-label="Your seat">
+      <div class="ticket-shine" aria-hidden="true"></div>
+      <img class="ticket-mark" data-cfg-src="shield" alt="" aria-hidden="true" />
       <div class="ticket-head">
-        <span>Your Seat</span>
+        <span class="ticket-title"><img data-cfg-src="shield" alt="" />Your Seat</span>
         <span class="ticket-code" id="rCode"></span>
       </div>
       <div class="ticket-grid">
@@ -103,11 +155,12 @@
       </div>
       <div class="ticket-perf" aria-hidden="true"></div>
       <p class="ticket-foot">Row 1 is closest to the stage · Seats are counted from the left while facing the stage</p>
+      <div class="stamp" aria-hidden="true"><span>Graduate</span><b data-cfg="year"></b></div>
     </section>
 
     <section class="card map-card">
       <div class="card-head">
-        <h3>Hall Seating Plan</h3>
+        <h3><span class="h-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-map"/></svg></span>Hall Seating Plan</h3>
         <div class="seg" role="group" aria-label="Map zoom">
           <button type="button" class="seg-btn is-on" data-zoom="seat">My seat</button>
           <button type="button" class="seg-btn" data-zoom="full">Full hall</button>
@@ -125,37 +178,61 @@
       </ul>
     </section>
 
-    <section class="card">
-      <div class="card-head"><h3>How to reach your seat</h3></div>
-      <ol class="steps" id="rSteps"></ol>
-    </section>
+    <div class="two-col">
+      <section class="card">
+        <div class="card-head"><h3><span class="h-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-walk"/></svg></span>How to reach your seat</h3></div>
+        <ol class="steps" id="rSteps"></ol>
+      </section>
 
-    <section class="card">
-      <div class="card-head"><h3>Important instructions</h3></div>
-      <ul class="notes" id="rNotes"></ul>
-      <p class="help" data-cfg="helpDesk"></p>
-    </section>
+      <section class="card">
+        <div class="card-head"><h3><span class="h-ic"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-info"/></svg></span>Important instructions</h3></div>
+        <ul class="notes" id="rNotes"></ul>
+        <p class="help" data-cfg="helpDesk"></p>
+      </section>
+    </div>
 
     <div class="actions">
       <button class="btn btn-outline" type="button" id="shareBtn">
         <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-share"/></svg><span>Share my seat</span>
       </button>
-      <button class="btn btn-gold" type="button" id="againBtn"><span class="btn-text">Find another seat</span></button>
+      <button class="btn btn-primary" type="button" id="againBtn"><span class="btn-text">Find another seat</span></button>
     </div>
-    <footer class="foot">With pride &amp; best wishes · <span data-cfg="university"></span></footer>
+
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" data-marquee></div></div>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- icons -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true">
-    <symbol id="i-cap" viewBox="0 0 64 48"><path d="M32 2 62 15 32 28 2 15Z" fill="currentColor"/><path d="M14 21v12c0 6 36 6 36 0V21L32 29Z" fill="currentColor" opacity=".8"/><path d="M58 17v15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="58" cy="34" r="2.6" fill="currentColor"/></symbol>
+    <symbol id="i-cap" viewBox="0 0 64 48"><path d="M32 2 62 15 32 28 2 15Z" fill="currentColor"/><path d="M14 21v12c0 6 36 6 36 0V21L32 29Z" fill="currentColor" opacity=".85"/><path d="M58 17v15" stroke="#ffcc00" stroke-width="2.4" stroke-linecap="round"/><circle cx="58" cy="34" r="3" fill="#ffcc00"/></symbol>
+    <symbol id="i-laurel" viewBox="0 0 60 150">
+      <path class="lr-stem" d="M46 146 C 22 120, 10 80, 26 8" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+      <g fill="currentColor">
+        <path style="--i:0" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(41 132) rotate(-160)"/>
+        <path style="--i:0" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(41 132) rotate(-30)"/>
+        <path style="--i:1" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(31 112) rotate(-165)"/>
+        <path style="--i:1" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(31 112) rotate(-35)"/>
+        <path style="--i:2" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(24 92) rotate(-170)"/>
+        <path style="--i:2" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(24 92) rotate(-45)"/>
+        <path style="--i:3" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(20 72) rotate(-175)"/>
+        <path style="--i:3" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(20 72) rotate(-55)"/>
+        <path style="--i:4" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(19 52) rotate(-180)"/>
+        <path style="--i:4" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(19 52) rotate(-65)"/>
+        <path style="--i:5" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(21 32) rotate(-180)"/>
+        <path style="--i:5" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(21 32) rotate(-75)"/>
+        <path style="--i:6" d="M0 0 C6 -7 16 -7 22 0 C16 7 6 7 0 0Z" transform="translate(26 10) rotate(-95)"/>
+      </g>
+    </symbol>
     <symbol id="i-id" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="11" r="2.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5.8 16c.6-1.6 1.8-2.4 3.2-2.4s2.6.8 3.2 2.4M14.5 10h4M14.5 13.5h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-seat" viewBox="0 0 24 24"><path d="M6 11V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v5M4 11h16v4H4zM6 15v5M18 15v5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5m5-5-5 5 5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 10h17M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="10" r="2.4" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M9 4 3.5 6v14L9 18l6 2 5.5-2V4L15 6 9 4Zm0 0v14m6-12v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4.5" r="2" fill="currentColor"/><path d="m9 21 2.5-6.5L14 17v4M10 9.5l3-2 2.5 3 3 1M12.8 8 11 14.5M10 9.5 7.5 13" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 11v5.5M12 7.6v.2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
     <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="6" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="18" cy="18.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m8.2 10.8 7.6-4.1M8.2 13.2l7.6 4.1" stroke="currentColor" stroke-width="1.8"/></symbol>
   </svg>
 

@@ -3,18 +3,24 @@ window.CONVOCATION_CONFIG = {
   demo: true,
 
   university: "Amity University Punjab",
-  logo: "assets/logo.svg",
+  logo: "assets/amity-logo.png",
+  shield: "assets/amity-shield.png",
 
   eventTitle: "Convocation 2026",
-  batchLine: "Celebrating the Graduating Class",
-  date: "Date to be announced",
+  year: "2026",
+  batchLine: "Celebrating the Graduating Class of 2026",
+  date: "Saturday, 14 November 2026",
+  countdownTo: "2026-11-14T00:00:00+05:30",  // change to the ceremony start time once known
+  countdownDone: "Today is the day! Congratulations, graduates!",
   reportingTime: "Reporting time: to be announced",
   venue: "Amity University Punjab, Mohali",
 
-  welcomeHeading: "Welcome, Graduates",
+  welcomeHeading: "Welcome, Graduates!",
   welcomeMessage:
     "Today we celebrate every late night, every exam and every dream that brought you here. " +
     "Enter your enrollment number to find your seat for the ceremony.",
+
+  marquee: ["Congratulations Graduates", "Amity University Punjab", "Convocation 2026", "Dream Big, Fly High", "Class of 2026"],
 
   exampleEnrollment: "A25305224077",
 
