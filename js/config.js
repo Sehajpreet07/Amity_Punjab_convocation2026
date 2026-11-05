@@ -14,6 +14,8 @@ window.CONVOCATION_CONFIG = {
   countdownDone: "Today is the day! Congratulations, graduates!",
   reportingTime: "Reporting time: to be announced",
   venue: "Amity University Punjab, Mohali",
+  venueAddress: "Sector 82A, IT City, International Airport Road, Mohali, Punjab 140306",
+  mapQuery: "Amity University Punjab, Sector 82A, Mohali",
 
   welcomeHeading: "Welcome, Graduates!",
   welcomeMessage:

@@ -192,7 +192,7 @@ button { font: inherit; color: inherit; cursor: pointer; }
   font-weight: 700; font-size: 16px;
   transition: transform .2s var(--ease), box-shadow .25s, background .2s;
 }
-.btn svg { width: 20px; height: 20px; }
+.btn svg { width: 20px; height: 20px; flex: none; }
 .btn-primary {
   color: var(--navy-ink);
   background: linear-gradient(135deg, #ffe066, var(--yellow) 45%, var(--yellow-2));
@@ -240,6 +240,29 @@ button { font: inherit; color: inherit; cursor: pointer; }
 }
 .info .ic { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--yellow-soft); color: var(--navy); }
 .info svg { width: 17px; height: 17px; }
+
+/* location */
+.location {
+  display: grid; gap: 18px; width: 100%; max-width: 860px; margin-top: 34px; padding: 18px; text-align: left;
+  border-radius: 26px; background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow);
+}
+.view-result .location { max-width: none; margin-top: 18px; }
+.loc-eyebrow { display: flex; align-items: center; gap: 10px; margin: 0; font-family: var(--display); font-weight: 700; font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--navy-2); }
+.loc-title { margin: 12px 0 0; font-family: var(--serif); font-size: 24px; font-weight: 800; color: var(--navy); }
+.loc-addr { margin: 6px 0 0; color: var(--muted); font-size: 14.5px; line-height: 1.6; }
+.loc-btns { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
+.btn-sm { height: 46px; padding: 0 18px; font-size: 14.5px; border-radius: 13px; text-decoration: none; }
+.btn-sm svg { width: 18px; height: 18px; }
+.loc-map { position: relative; min-height: 220px; border-radius: 18px; overflow: hidden; background: var(--sky); border: 1px solid #e3e8f2; }
+.loc-map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.info-link { display: inline-flex; align-items: center; gap: 10px; color: inherit; text-decoration: none; }
+.info-link:hover span:last-child { text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 720px) {
+  .location { grid-template-columns: 1fr 1.25fr; align-items: stretch; padding: 22px; }
+  .loc-text { display: flex; flex-direction: column; justify-content: center; padding: 6px 4px 6px 6px; }
+  .loc-map { min-height: 260px; }
+}
+@media (max-width: 560px) { .loc-btns .btn { width: auto; flex: 1; } }
 
 /* marquee */
 .marquee { position: relative; overflow: hidden; background: var(--navy); color: var(--yellow); padding: 12px 0; border-top: 3px solid var(--yellow); }

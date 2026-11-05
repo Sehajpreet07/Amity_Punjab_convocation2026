@@ -28,6 +28,16 @@
     }
   }
 
+  // map links
+  if (C.mapQuery) {
+    const q = encodeURIComponent(C.mapQuery);
+    $$("[data-map-link]").forEach((el) => { el.href = `https://www.google.com/maps/search/?api=1&query=${q}`; });
+    $$("[data-dir-link]").forEach((el) => { el.href = `https://www.google.com/maps/dir/?api=1&destination=${q}`; });
+    $$("[data-map-embed]").forEach((el) => { el.src = `https://maps.google.com/maps?q=${q}&z=15&output=embed`; });
+  } else {
+    $$(".location").forEach((el) => { el.hidden = true; });
+  }
+
   // headline words
   const title = $("#welcomeTitle");
   const words = title.textContent.trim().split(/\s+/);
